@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ReservationSystem.Data.Sitting>
+
+@{
+    ViewData["Title"] = "Manage Past Sittings";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" asp-action="IndexSitting">Back to Sitting Index</a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Category</th>
+                <th scope="col">Capacity</th>
+                <th scope="col">Used</th>
+                <th scope="col">Remain</th>
+                <th scope="col">Reservations</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SittingCategory.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Capacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UsedCapacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RemainingCapacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reservations.Count)
+                    </td>
+                    <td>
+                        <a role="button" asp-action="DetailsSitting" asp-route-id="@item.Id">Details</a>                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}

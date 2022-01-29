@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-5">
+    @if (User.IsInRole("Admin")) {
+    <h4>Welcome, administrator!</h4>
+    }
+    else{
+    <h4>Welcome, staff!</h4>
+    }
+</div>

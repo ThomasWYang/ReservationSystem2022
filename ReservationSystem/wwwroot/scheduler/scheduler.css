@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+#scheduler {
+    display: inline-flex;
+    flex-direction: column;
+    background: white;
+    font-family: Verdana, sans-serif;
+    cursor: default;
+}
+
+    #scheduler .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background: linear-gradient(to bottom right, #595959, #a6a6a6);
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+
+        #scheduler .header > div {
+            padding: 12px 12px;
+        }
+
+    #scheduler .button:hover {
+        background: #595959;
+        cursor: pointer;
+    }
+
+    #scheduler .body {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        border-right: 1px solid #d9d9d9;
+        border-bottom: 1px solid #d9d9d9;
+    }
+
+    #scheduler .row-header-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    #scheduler .row-header {
+        display: flex;
+        color: #595959;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    #scheduler .row-container {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    #scheduler .column-header {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #scheduler .hour {
+        height: 100%;
+        background: linear-gradient(#f2f2f2, #d9d9d9);
+        border-left: 1px solid #d9d9d9;
+        padding: 4px 0px;
+        color: #595959;
+        text-align: center;
+    }
+
+    #scheduler .responsiveHour {
+        height: 100%;
+        background: linear-gradient(#f2f2f2, #d9d9d9);
+        border-left: 1px solid #d9d9d9;
+        padding: 4px 0px;
+        color: #595959;
+        text-align: center;
+    }
+
+    #scheduler .rsvn-container {
+        position: relative;
+    }
+
+    #scheduler .row {
+        display: flex;
+        flex-direction: row;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    #scheduler .cell {
+        border-left: 1px solid #d9d9d9;
+        border-top: 1px solid #d9d9d9;
+        text-align: center;
+    }
+
+    #scheduler .responsiveCell {
+        border-left: 1px solid #d9d9d9;
+        border-top: 1px solid #d9d9d9;
+        text-align: center;
+    }
+
+    #scheduler .reservation {
+        position: absolute;
+        border: 1px solid #a6a6a6;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    #scheduler .reservation-final {
+        background: #fffff0;
+        background: linear-gradient(#3e9ee5, #216ccc);
+        z-index: 2;
+    }
+
+    #scheduler .reservation-creating {
+        background: #b3b3b3;
+        background: linear-gradient(#b3b3b3, #a6a6a6);
+        opacity: .75;
+        z-index: 1;
+    }
+
+    #scheduler .reservation-error {
+        background: #ff944d;
+        background: linear-gradient(#ff944d, #ff8533);
+    }
+
+    #scheduler .occupied {
+        background-color: grey;
+    }
+
+    #scheduler .booked {
+        background-color: greenyellow;
+    }

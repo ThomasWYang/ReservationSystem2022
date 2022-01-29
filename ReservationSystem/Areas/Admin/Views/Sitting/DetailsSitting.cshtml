@@ -1,0 +1,183 @@
+﻿@model ReservationSystem.Areas.Admin.Models.Sitting.DetailsSitting
+
+@{
+    ViewData["Title"] = "Sitting Details";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-info float-right" onclick="history.go(-1)">Back to last page</button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-4">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sitting.Date)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.Date)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sitting.SittingCategory.StartTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.SittingCategory.StartTime)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sitting.SittingCategory.EndTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.SittingCategory.EndTime)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-4">
+        <dl>
+            <dt>
+                Capacity
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.Capacity)
+            </dd>
+            <dt>
+                Used Capacity
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.UsedCapacity)
+            </dd>
+            <dt>
+                Remaining Capacity
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.RemainingCapacity)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-4">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sitting.Status)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.Status)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Sitting.SittingCategory)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Sitting.SittingCategory.Name)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-12 my-3">
+        <div id="scheduler" class="container-fluid px-0"></div>
+    </div>
+
+    <div class="col-12 mt-3">
+        <h5>Reservations</h5>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Arrival</th>
+                    <th scope="col">Leave</th>
+                    <th scope="col">Guests</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Sitting.Reservations)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Sitting.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpectedStartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExpectedEndTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NumOfGuests)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Customer.CustEmail)
+                        </td>
+                        <td>
+                            <a asp-action="DetailsReservation" asp-controller="Reservation" asp-route-id="@item.Id">Details</a>
+                            @if ((int)item.Status == 0)
+                            {
+                                <a asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@item.Id"> | Allocate</a>
+                            }
+                            else if ((int)item.Status == 1)
+                            {
+                                <a asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@item.Id"> | Reallocate</a>
+                            }
+                            @if ((int)item.Status < 2)
+                            {
+                                <a class="cancelreservation" asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@item.Id"> | Cancel</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+    <link href="~/scheduler/scheduler.css" rel="stylesheet" />
+}
+@section Scripts {
+    <script>
+        $(".cancelreservation").on("click", () => {
+            if (confirm("Do you want to cancel this reservation?")) { }
+            else { return false; }
+        });
+    </script>
+
+    <script src="~/scheduler/scheduler.js"></script>
+    <script>
+        var sittingDate = '@Model.Sitting.Date.ToShortDateString()';
+        var sittingName = '@Model.Sitting.SittingCategory.Name';
+        var currentReservationId = null;
+        var tables = @Json.Serialize(Model.SCTablesDTO);
+        var timeslots =@Json.Serialize(Model.SCTimeslotsDTO);
+        var sittingUnits =@Json.Serialize(Model.SittingUnitsDTO);
+
+        var selectedSittingUnitId = [];
+        var x = 100 / timeslots.length + '%';
+
+
+        $("#scheduler").scheduler(
+            {
+                responsiveWidth: x,
+                sittingDate: sittingDate,
+                sittingName: sittingName,
+                currentReservationId: currentReservationId,
+                timeslots: timeslots,
+                tables: tables,
+                sittingUnits: sittingUnits,
+                clickEnabled: false,
+            }
+        );
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ReservationSystem.Data.Customer>
+
+@{
+    ViewData["Title"] = "Manage Customers";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustFName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustLName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CustPhone)
+                </th>
+                <th>
+                    Type
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustFName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustLName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustPhone)
+                </td>
+                <td>
+                    @{ 
+                        var type = item.IdentityUserId == null ? "Visitor" : "Member";
+                        }
+                    @Html.DisplayFor(modelItem => type)
+                </td>
+                <td>
+                    <a asp-controller="Reservation" asp-action="HistoryReservation" asp-route-id="@item.Id">Reservation History</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}

@@ -1,0 +1,163 @@
+﻿@model ReservationSystem.Data.Reservation
+
+@{
+    ViewData["Title"] = "Customer Reservation Details";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-info float-right" onclick="history.go(-1)">Back to last page</button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-8 mx-auto">
+        <div class="row">
+            <div class="col-6">
+                <dl>
+                    <dt>
+                        Category
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Sitting.SittingCategory.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Sitting.Capacity)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Sitting.Capacity)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <dl>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Sitting.SittingCategory.StartTime)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Sitting.SittingCategory.StartTime)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Sitting.SittingCategory.EndTime)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Sitting.SittingCategory.EndTime)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-8 mx-auto">
+        <div class="row">
+            <div class="col-6">
+                <dl>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Sitting.Date)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Sitting.Date)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ExpectedStartTime)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ExpectedStartTime)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ExpectedEndTime)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ExpectedEndTime)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.NumOfGuests)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.NumOfGuests)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-6">
+                <dl>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Notes)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Notes)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TimeOfBooking)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TimeOfBooking)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.WayOfBooking)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.WayOfBooking)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Status)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-8 mx-auto mt-3">
+        <div class="row">
+            @if ((int)Model.Status == 0)
+            {
+                <div class="col-6">
+                    <a class="btn btn-primary mr-3 w-50" asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@Model.Id">Allocate</a>
+                </div>
+                <div class="col-6">
+                    <a id="cancel" class="btn btn-danger w-50" asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@Model.Id">Cancel</a>
+                </div>
+            }
+            @if ((int)Model.Status == 1)
+            {
+                <div class="col-6">
+                    <a class="btn btn-primary mr-3 w-50" asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@Model.Id">Reallocate</a>
+                </div>
+                <div class="col-6 mb-2">
+                    <a id="cancel" class="btn btn-danger w-50" asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@Model.Id">Cancel</a>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-info mr-3 w-50" asp-action="UpdateSeated" asp-controller="Reservation" asp-route-id="@Model.Id">Seated</a>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-info mr-3 w-50" asp-action="UpdateExpired" asp-controller="Reservation" asp-route-id="@Model.Id">Expired</a>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script>
+        $("#cancel").on("click", () => {
+            if (confirm("Do you want to cancel this reservation?")) { }
+            else { return false; }
+        });
+    </script>
+}

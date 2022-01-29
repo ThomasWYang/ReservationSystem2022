@@ -1,0 +1,263 @@
+﻿@model ReservationSystem.Models.Reservation.CreateReservation
+
+@{
+    ViewData["Title"] = "Make a Reservation";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                @if (User.IsInRole("Member"))
+                {
+                    <a class="btn btn-info float-right" asp-controller="Home" asp-action="IndexMember">Back to Home Page</a>
+                }
+                else
+                {
+                    <a class="btn btn-info float-right" asp-controller="Home" asp-action="Index">Back to Home Page</a>
+                }
+            </div>
+        </div>        
+        <hr />
+    </div>
+
+    <form class="col-12 mx-auto" asp-action="CreateReservation" style="max-width: 800px">
+
+        <div class="mt-3">
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+            @if (Model.CustomerId > 0)
+            {
+                <div class="row" id="CustInfo">
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustFName" class="control-label"></label>
+                        <div>@Html.DisplayFor(model => model.Customer.CustFName)</div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustLName" class="control-label"></label>
+                        <div>@Html.DisplayFor(model => model.Customer.CustLName)</div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustEmail" class="control-label"></label>
+                        <div>@Html.DisplayFor(model => model.Customer.CustEmail)</div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustPhone" class="control-label"></label>
+                        <div>@Html.DisplayFor(model => model.Customer.CustPhone)</div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row" id="CustInfo">
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustFName" class="control-label"></label>
+                        <input asp-for="Customer.CustFName" class="form-control" />
+                        <span asp-validation-for="Customer.CustFName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustLName" class="control-label"></label>
+                        <input asp-for="Customer.CustLName" class="form-control" />
+                        <span asp-validation-for="Customer.CustLName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustEmail" class="control-label"></label>
+                        <input asp-for="Customer.CustEmail" class="form-control" />
+                        <span asp-validation-for="Customer.CustEmail" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="Customer.CustPhone" class="control-label"></label>
+                        <input asp-for="Customer.CustPhone" class="form-control" />
+                        <span asp-validation-for="Customer.CustPhone" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+
+            <div class="row" id="SelectSitting">
+                <div class="form-group col-6">
+                    <label asp-for="SelectedDate" class="control-label"></label>
+                    <input asp-for="SelectedDate" class="form-control" id="Calendar" min="@Model.MinDate" max="@Model.MaxDate" />
+                    <span asp-validation-for="SelectedDate" class="text-danger"></span>
+                    <span id="SittingWarning" hidden style="color: red; margin-top: 10px; display: block">Sorry, no available sittings for this date</span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="SelectedSittingId" class="control-label"></label>
+                    <select asp-for="SelectedSittingId" class="form-control" id="Sittings"></select>
+                    <span asp-validation-for="SelectedSittingId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row" id="SelectTime">
+                <div class="form-group col-6">
+                    <label asp-for="ExpectedStartTime" class="control-label"></label>
+                    <select asp-for="ExpectedStartTime" type="text" class="form-control" id="StartTimes"></select>
+                    <span asp-validation-for="ExpectedStartTime" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="ExpectedEndTime" class="control-label"></label>
+                    <select asp-for="ExpectedEndTime" type="text" class="form-control" id="EndTimes"></select>
+                    <span asp-validation-for="ExpectedEndTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row" id="ReservationInfo">
+                <div class="form-group col-6">
+                    <label asp-for="NumOfGuests" class="control-label"></label>
+                    <input asp-for="NumOfGuests" class="form-control" min="1" id="NumOfGuests" />
+                    <span id="CapacityWarning" hidden style="color: red; margin-bottom: 10px; display: block">
+                        Please note: <span id="RemainingCapacity"></span> seats left
+                    </span>
+                    <span asp-validation-for="NumOfGuests" class="text-danger"></span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <input asp-for="Notes" class="form-control" id="notes" />
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="CustomerId" />
+
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary w-50">Submit</button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            //when a date is selected, show the sittings available
+            $('#Calendar').on(' change', function () {
+
+                $('#Sittings').empty();
+                $('#StartTimes').empty();
+                $('#EndTimes').empty();
+                $('#SittingWarning').attr("hidden", true);
+                $('#CapacityWarning').attr("hidden", true);
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Reservation/GetSittingsByDate',
+                    data: { date: this.value },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.length > 0) {
+                            $('#Sittings').append($('<option>', {
+                                value: "none", text: '-- Select a Sitting --', selected: true, disabled: true,
+                            }));
+                            $.each(response, function (i, item) {
+                                $('#Sittings').append($('<option>', {
+                                    value: item.id, text: item.date + " " + item.startTime + "-" + item.endTime + " " + item.scName,
+                                }));
+                            });
+                        }
+                        else {
+                            $('#SittingWarning').attr("hidden", false);
+                        }
+                    },
+                });
+            });
+
+            //when a sitting is selected, show the remaining capacity and the start times available
+            $('#Sittings').on('change', function () {
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Reservation/GetSittingCapacity',
+                    data: { sittingId: this.value },
+                    dataType: "json",
+                    success: function (response) {
+                        $('#CapacityWarning').attr("hidden", false);
+                        $('#RemainingCapacity').text(response);
+                        $('#NumOfGuests').attr("max", response);
+                    },
+                });
+
+                $.ajax({
+                    type: "GET",
+                    url: '/Reservation/GetStartTimes',
+                    data: { sittingId: this.value },
+                    dataType: "json",
+                    success: function (response) {
+                        $('#StartTimes').empty();
+                        $('#EndTimes').empty();
+                        $('#StartTimes').append($('<option>', {
+                            value: "none", text: '-- Select a Start Time --', selected: true, disabled: true,
+                        }));
+                        $.each(response, function (i, item) {
+                            $('#StartTimes').append($('<option>', {
+                                text: item
+                            }));
+                        });
+                    },
+                });
+            })
+
+            //when a start time is selected,  show the end times available
+            $('#StartTimes').on('change', function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/Reservation/GetEndTimes',
+                    data: { sittingId: $('#Sittings').val(), startTime: this.value },
+                    dataType: "json",
+                    success: function (response) {
+                        $('#EndTimes').empty();
+                        $('#EndTimes').append($('<option>', {
+                            value: "none", text: '-- Select an End Time --', selected: true, disabled: true,
+                        }));
+                        $.each(response, function (i, item) {
+                            $('#EndTimes').append($('<option>', {
+                                text: item
+                            }));
+                        });
+                    },
+                });
+            })
+
+        })
+    </script>
+
+    @*<script>
+            var sittings = @Json.Serialize(Model.FutureSittings);
+            var filter;
+            var filteredSittings;
+            $('#demo').on('change', function () {
+                filter = this.value;
+                filteredSittings = sittings.filter(s => s.date == filter);
+                $("#sittingsTable").find('tbody').empty();
+                filteredSittings.forEach(
+                    function (e) {
+                        $("#sittingsTable").find('tbody').append($('<tr scope="row">').append($('<td>').text(e.date)));
+                    }
+                );
+            });
+        </script>*@
+
+
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/js/jquery.amsify.suggestags.js"></script>
+        <link href="~/css/amsify.suggestags.css" rel="stylesheet" />
+        <script>
+            $(document).ready(function () {
+                $('input[id="notes"]').amsifySuggestags({
+                    type: 'amsify',
+                    suggestions: ['Vegetarian', 'Table near window'],
+                    printValues: false
+                });
+            });
+        </script>*@
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

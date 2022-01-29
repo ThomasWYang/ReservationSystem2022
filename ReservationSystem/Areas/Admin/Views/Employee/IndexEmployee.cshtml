@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ReservationSystem.Data.Employee>
+
+@{
+    ViewData["Title"] = "Manage Employees";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" role="button" asp-action="CreateEmployee">Add Employee</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpFName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpLName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpEmail)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpPhone)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpFName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpLName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpEmail)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpPhone)
+                        </td>
+                        @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}
+

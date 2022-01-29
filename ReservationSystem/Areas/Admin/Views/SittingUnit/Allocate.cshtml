@@ -1,0 +1,191 @@
+﻿@model ReservationSystem.Areas.Admin.Models.SittingUnit.Allocate
+
+@{
+    ViewData["Title"] = "Allocate Seats";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-info float-right" onclick="history.go(-1)">Go Back</button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <h5>Sitting Info</h5>
+                <hr />
+                <dl class="row">
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.Sitting.SittingCategory.Name)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.Sitting.SittingCategory.Name)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.Sitting.Date)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.Sitting.Date)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.Sitting.SittingCategory.StartTime)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.Sitting.SittingCategory.StartTime)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.Sitting.SittingCategory.EndTime)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.Sitting.SittingCategory.EndTime)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-sm-6">
+                <h5>Reservation Info</h5>
+                <hr />
+                <dl class="row">
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.NumOfGuests)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.NumOfGuests)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.ExpectedStartTime)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.ExpectedStartTime)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.ExpectedEndTime)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.ExpectedEndTime)
+                    </dd>
+                    <dt class="col-6">
+                        @Html.DisplayNameFor(model => model.CurrentReservation.Notes)
+                    </dt>
+                    <dd class="col-6">
+                        @Html.DisplayFor(model => model.CurrentReservation.Notes)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div id="scheduler" class="container-fluid px-0"></div>
+    </div>
+
+    <div class="col-12 mt-3">
+        @if ((int)Model.CurrentReservation.Status == 1)
+        {
+            <button id="toggler" class="btn btn-primary btn-block">Enable Reallocation</button>
+        }
+        <input id="allocate" asp-action="Allocate" type="submit" value="Allocate" class="btn btn-primary btn-block" />
+    </div>
+
+    @section Styles{
+        <link href="~/scheduler/scheduler.css" rel="stylesheet" />
+    }
+
+    @section Scripts {
+
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+        <script src="~/scheduler/scheduler.js"></script>
+
+        <script>
+        var sittingDate = '@Model.CurrentReservation.Sitting.Date.ToShortDateString()';
+        var sittingName = '@Model.CurrentReservation.Sitting.SittingCategory.Name';
+        var currentReservationId = @Model.CurrentReservation.Id;
+        var tables = @Json.Serialize(Model.SCTablesDTO);
+        var timeslots =@Json.Serialize(Model.SCTimeslotsDTO);
+        var sittingUnits =@Json.Serialize(Model.SittingUnitsDTO);
+
+        var selectedSittingUnitId = [];
+        var x = 100 / timeslots.length + '%';
+
+        $(document).ready(function () {
+            if (@((int)Model.CurrentReservation.Status)> 0) {
+                $("#allocate").hide();
+                $("#scheduler").scheduler(
+                    {
+                        responsiveWidth: x,
+                        sittingDate: sittingDate,
+                        sittingName: sittingName,
+                        currentReservationId: currentReservationId,
+                        timeslots: timeslots,
+                        tables: tables,
+                        sittingUnits: sittingUnits,
+                        clickEnabled: false,
+                    }
+                );
+            }
+            else {
+                $("#scheduler").scheduler(
+                    {
+                        responsiveWidth: x,
+                        sittingDate: sittingDate,
+                        sittingName: sittingName,
+                        currentReservationId: currentReservationId,
+                        timeslots: timeslots,
+                        tables: tables,
+                        sittingUnits: sittingUnits,
+                        clickEnabled: true,
+                    }
+                );
+            }
+
+            $("#toggler").click(function () {
+                if (confirm("Do you wish to enable the reallocation?")) {
+                    $("#allocate").show();
+                    $(this).hide();
+                    $(".timeslot").on("click", function (e) {
+                        if (!$(e.target).hasClass("occupied")) {
+                            if (!$(e.target).hasClass("booked")) { $(e.target).addClass("booked") }
+                            else { $(e.target).removeClass("booked") }
+                        }
+                    });
+                }
+                else { return false; };
+            });
+
+        });
+
+        $("#allocate").on("click", () => {
+            //Get id's of all elements with a particular class
+            selectedSittingUnitId = $(".booked").map(function () {
+                return parseInt(this.id);
+            }).get();
+
+            //console.log(selectedSittingUnitId);
+            if (selectedSittingUnitId.length == 0) {
+                if (confirm("Do you want to proceed with no allocation?")) { }
+                else { return false; }
+            }
+             //Post back selected ids
+            $.ajax({
+                type: "POST",
+                url: '/Admin/SittingUnit/Allocate',
+                data: { currentReservationId: currentReservationId, selectedSittingUnitId: selectedSittingUnitId },
+                dataType: "json",
+                success: function (data) {
+                    window.location.href = data;
+                },
+            });
+        });
+
+        </script>
+
+    }

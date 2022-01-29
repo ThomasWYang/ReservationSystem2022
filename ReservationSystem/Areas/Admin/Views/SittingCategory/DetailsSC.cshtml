@@ -1,0 +1,155 @@
+﻿@model ReservationSystem.Data.SittingCategory
+
+@{
+    ViewData["Title"] = "Sitting Category Details";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" role="button" asp-action="IndexSC">Back to Category List</a>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="col-4">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Capacity)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Capacity)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-4">
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.StartTime)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EndTime)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-12 mt-3">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Timeslots</h4>
+                <table class="table">
+                    <tbody>
+                        @foreach (var item in Model.SCTimeslots)
+                        {
+                            <tr>
+                                <td class="pl-0">@(item.StartTime + " - " + item.EndTime)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h4>Tables</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="pl-0" scope="col">Area</th>
+                            <th class="pl-0" scope="col">Tables</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pl-0">Main</td>
+                            <td class="pl-0">@ViewBag.mainString</td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">Outside</td>
+                            <td class="pl-0">@ViewBag.outsideString</td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0">Balcony</td>
+                            <td class="pl-0">@ViewBag.balconyString</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>Sittings</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" role="button" asp-controller="Sitting" asp-action="CreateSitting" asp-route-id="@Model.Id">Add Sitting</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" class="pl-0">Date</th>
+                    <th scope="col" class="pl-0">Status</th>
+                    <th scope="col" class="pl-0">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SCSittings)
+                {
+                    <tr>
+                        <td class="pl-0">@item.Date.ToString("yyyy/MM/dd")</td>
+                        <td class="pl-0">@item.Status</td>
+                        <td class="pl-0">
+                            <a asp-controller="Sitting" asp-action="DetailsSitting" asp-route-id="@item.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+    @if (TempData["Message"] != null)
+    {
+        <script type="text/javascript">
+
+            window.onload = function () {
+                alert("@TempData["Message"]");
+            };
+        </script>
+    }
+
+}
+
+
+
+
+
+

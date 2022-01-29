@@ -1,0 +1,86 @@
+﻿@model ReservationSystem.Areas.Admin.Models.Report.Report
+
+@{
+    ViewData["Title"] = "Report";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    @if ((bool)ViewData["Check"])
+    {
+        <div class="col-4">
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.MostLoyalCustomer)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.MostLoyalCustomer)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Customer.RegistrationRate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Customer.RegistrationRate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Sitting.AvgOcpy)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Sitting.AvgOcpy)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Sitting.HighestOcpy)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Sitting.HighestOcpy)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Reservation.AverageDuation)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Reservation.AverageDuation)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Reservation.WayOfBooking)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Reservation.WayOfBooking)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Reservation.CancelRate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Reservation.CancelRate)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Reservation.NoShowRate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Reservation.NoShowRate)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-4">
+
+        </div>
+        <div class="col-4">
+
+        </div>
+    }
+    else
+    {
+        <p>No report available</p>
+    }
+
+</div>

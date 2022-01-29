@@ -1,0 +1,94 @@
+﻿@model IEnumerable<ReservationSystem.Data.Sitting>
+
+@{
+    ViewData["Title"] = "Manage Future Sittings";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" asp-action="IndexSitting">Back to Sitting Index</a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Category</th>
+                <th scope="col">Capacity</th>
+                <th scope="col">Used</th>
+                <th scope="col">Remain</th>
+                <th scope="col">Active Reservations</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SittingCategory.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Capacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UsedCapacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RemainingCapacity)
+                    </td>
+                    <td>
+                        @{var activeReservations = item.Reservations.Count(r => (int)r.Status < 4);
+                            var totalReservations = item.Reservations.Count;
+                            string numofReservations = $"{activeReservations} of {totalReservations}";
+                            }
+                    @Html.DisplayFor(modelItem => numofReservations)
+                    </td>
+                    <td>
+                        <a role="button" asp-action="DetailsSitting" asp-route-id="@item.Id">Details</a>
+                        @if (item.Status == ReservationSystem.Data.Enums.SittingStatus.Open)
+                        {
+                            <a class="closesitting" role="button" asp-action="ManuallyCloseSitting" asp-route-id="@item.Id"> | Close</a>
+                        }
+                        else if (item.Status == ReservationSystem.Data.Enums.SittingStatus.Closed && item.RemainingCapacity > 0)
+                        {
+                            <a class="reopensitting" role="button" asp-action="ManuallyReopenSitting" asp-route-id="@item.Id"> | Reopen</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script>
+        $(".closesitting").on("click", () => {
+            if (confirm("Do you want to close this sitting?")) { }
+            else { return false; }
+        });
+        $(".reopensitting").on("click", () => {
+            if (confirm("Do you want to reopen this sitting?")) { }
+            else { return false; }
+        });
+    </script>
+}

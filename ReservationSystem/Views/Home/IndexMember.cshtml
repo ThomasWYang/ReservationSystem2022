@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "IndexMember";
+}
+
+<div class="text-center mt-5">
+    <h4>Welcome, @ViewData["Name"]</h4>
+    <p>What would you like to do today?</p>
+
+    <div class="column justify-content-center mb-3">
+        <a class="btn btn-info w-25 text-nowrap" asp-controller="Reservation" asp-action="CreateReservation">Reserve Now</a>
+    </div>
+    <div class="column justify-content-center mb-3">
+        <a class="btn btn-info w-25 text-nowrap" asp-controller="Reservation" asp-action="HistoryReservation">View History</a>
+    </div>    
+</div>
+

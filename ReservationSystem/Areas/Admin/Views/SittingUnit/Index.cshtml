@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ReservationSystem.Data.SittingUnit>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Sitting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sitting.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeslotId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TableId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reservation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sitting.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sitting.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeslotId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TableId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reservation.Id)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}

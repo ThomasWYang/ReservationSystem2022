@@ -1,0 +1,90 @@
+﻿@model ReservationSystem.Areas.Admin.Models.Sitting.CreateSitting
+
+@{
+    ViewData["Title"] = "Create Sitting";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" role="button" asp-controller="SittingCategory" asp-action="DetailsSC" asp-route-id="@Model.SittingCategoryId">Back to Category</a>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <form class="col-12 mx-auto" asp-action="CreateSitting" style="max-width: 800px">
+
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+        <div class="row">
+            <div class="form-group col-6">
+                <input type="hidden" asp-for="SittingCategoryId" />
+                <div>
+                    <h5>Sitting Category Info</h5>
+                    <dl class="row">
+                        <dt class="col-6">
+                            @Html.DisplayNameFor(model => model.SittingCategory.Name)
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.SittingCategory.Name)
+                        </dd>
+                        <dt class="col-6">
+                            @Html.DisplayNameFor(model => model.SittingCategory.Capacity)
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.SittingCategory.Capacity)
+                        </dd>
+                        <dt class="col-6">
+                            @Html.DisplayNameFor(model => model.SittingCategory.StartTime)
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.SittingCategory.StartTime)
+                        </dd>
+                        <dt class="col-6">
+                            @Html.DisplayNameFor(model => model.SittingCategory.EndTime)
+                        </dt>
+                        <dd class="col-6">
+                            @Html.DisplayFor(model => model.SittingCategory.EndTime)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="form-group col-6">
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <input asp-for="StartDate" class="form-control calendar" id="StartDate" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <input asp-for="EndDate" class="form-control calendar" id="EndDate" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <input class="btn btn-primary w-50" type="submit" value="Create" />
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+
+    <script>
+        let today = new Date().toISOString().slice(0, 10);
+        $('#StartDate').attr('min', today);
+        $('#StartDate').on('change', function () {
+            $('#EndDate').attr('min', $('#StartDate').val());
+        })
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

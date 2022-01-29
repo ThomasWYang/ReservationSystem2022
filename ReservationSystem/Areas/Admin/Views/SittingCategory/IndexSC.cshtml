@@ -1,0 +1,73 @@
+﻿@model IEnumerable<ReservationSystem.Data.SittingCategory>
+
+@{
+    ViewData["Title"] = "Manage Sitting Categories";
+}
+
+<div class="row mx-5">
+    
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" role="button" asp-action="CreateSC">Create New</a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Capacity)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.StartTime)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.EndTime)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Duration)
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Capacity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Duration)
+                    </td>
+                    <td>
+                        <a asp-action="DetailsSC" asp-route-id="@item.Id">Details</a>
+                        @if (item.SCSittings.Count == 0)
+                        {<a asp-action="DeleteSC" asp-route-id="@item.Id"> | Delete</a>}
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles{
+    <link href="~/css/my02.css" rel="stylesheet" />
+}

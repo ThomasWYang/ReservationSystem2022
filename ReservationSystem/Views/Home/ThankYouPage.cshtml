@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "ThankYouPage";
+}
+
+<div class="text-center mt-5">
+    <p>Thank you for booking with us!</p>
+    @if (User.IsInRole("Member"))
+    {
+        <a class="btn btn-info w-25" asp-action="IndexMember">Back to Home Page</a>
+    }
+    else
+    {
+        <a class="btn btn-info w-25" asp-action="Index">Back to Home Page</a>
+    }
+</div>

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ReservationSystem.Data.Reservation>
+@using ReservationSystem.Data.Enums;
+
+@{    
+    ViewData["Title"] = "Manage Future Reservations";
+}
+
+<div class="row mx-5">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <h4>@ViewData["Title"]</h4>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-info float-right" asp-action="IndexReservation">Back to Reservation Index</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(model => model.TimeOfBooking)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Sitting.Date)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.ExpectedStartTime)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.ExpectedEndTime)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.NumOfGuests)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Status)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Customer)</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeOfBooking)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sitting.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpectedStartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpectedEndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumOfGuests)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Customer.CustEmail)
+                    </td>
+                    <td>
+                        <a asp-action="DetailsReservation" asp-route-id="@item.Id">Details</a>
+                        @if ((int)item.Status == 0)
+                        {
+                            <a asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@item.Id"> | Allocate</a>
+                        }
+                        else if ((int)item.Status == 1)
+                        {
+                            <a asp-action="Allocate" asp-controller="SittingUnit" asp-route-id="@item.Id"> | Reallocate</a>
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    </div>
+
+    @section Styles{
+        <link href="~/css/my02.css" rel="stylesheet" />
+    }
